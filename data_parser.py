@@ -27,10 +27,11 @@ def organize_data(
     '''Record new month into the snapshot. Organize input and target month data for every data set.'''
 
     #   Climate Index values used as input data for each training set
-    input_types = {header[i]: var for i, var in enumerate(line[1:], 1)}
+    input_types = {header[i]: var if var else 0 for i,
+                   var in enumerate(line[1:], 1)}
 
     #   Translate dates into the name of the month as an input variable
-    input_types['date'] = months[int(line[0].split("-")[1])-1]
+    input_types['date'] = int(line[0].split("-")[1])-1
 
     #   Cycle in the newest month and remove the oldest one in each snapshot
     curr_months.pop(0)
@@ -59,15 +60,15 @@ def main(
             organize_data(line, curr_line, dataset.copy(), header,
                           curr_months, input_months, target_months)
 
-    json_file_path = f'TrainingData/JSONData/{input_months}Inputs/test_{input_months}input_{target_months}target.json'
+    json_file_path = f'TrainingData/JSONData/{input_months}Inputs/{input_months}input_{target_months}target.json'
     with open(json_file_path, 'w') as file:
         json_string = json.dumps(
             filtered_data, indent=None, separators=(',', ':'))
         file.write(json_string)
 
 
-for i in range(5, 11):
-    for j in range(1, 6):
+for i in range(8, 9):
+    for j in range(5, 6):
         filtered_data.clear()
 
         #   Record snapshots of months (input months + target months) while scanning the csv file

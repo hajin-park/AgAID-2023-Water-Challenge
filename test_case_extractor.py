@@ -3,8 +3,8 @@ import random
 
 
 def main():
-    for i in range(5, 11):
-        for j in range(1, 6):
+    for i in range(8, 9):
+        for j in range(5, 6):
             data_file_path = f'TrainingData/JSONData/{i}Inputs/{i}input_{j}target.json'
             test_file_path = f'TrainingData/JSONData/{i}Inputs/test_{i}input_{j}target.json'
             extracted_test_cases = []
