@@ -59,21 +59,21 @@ def main(
             organize_data(line, curr_line, dataset.copy(), header,
                           curr_months, input_months, target_months)
 
-    json_filename = f"{input_months}input_{target_months}target"
-    with open(f'TrainingData/{input_months}Inputs/{json_filename}.json', 'w') as file:
+    json_file_path = f'TrainingData/JSONData/{input_months}Inputs/test_{input_months}input_{target_months}target.json'
+    with open(json_file_path, 'w') as file:
         json_string = json.dumps(
             filtered_data, indent=None, separators=(',', ':'))
         file.write(json_string)
-        file.close
 
 
 for i in range(5, 11):
     for j in range(1, 6):
-        # input_months = int(input("Enter # of months to use as the input: "))
-        # target_months = int(input("Enter # of months to use as the target: "))
         filtered_data.clear()
 
         #   Record snapshots of months (input months + target months) while scanning the csv file
         curr_months = [{} for _ in range(i + j)]
         main("00_all_ClimateIndices_and_precip",
              curr_months, i, j)
+
+# input_months = int(input("Enter # of months to use as the input: "))
+# target_months = int(input("Enter # of months to use as the target: "))
