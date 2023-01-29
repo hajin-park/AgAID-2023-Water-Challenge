@@ -1,3 +1,8 @@
+'''
+Organize csv file data into data sets used to train machine learning models.
+Returns a json file with a list of training data sets of input variables and a target number.
+'''
+
 import csv
 import json
 
