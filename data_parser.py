@@ -27,7 +27,7 @@ def organize_data(line, curr_line, dataset_copy, header):
 
 
 def main(filename):
-    with open(f'AgAthon2023_data/{filename}.csv', 'r') as file:
+    with open(f'MainData/{filename}.csv', 'r') as file:
         reader = csv.reader(file, delimiter=',')
         header = next(reader)
         curr_line = 0
@@ -42,4 +42,4 @@ def main(filename):
         file.close
 
 
-main("MainData/00_all_ClimateIndices_and_precip")
+main("00_all_ClimateIndices_and_precip")
