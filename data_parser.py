@@ -3,27 +3,27 @@ Organize csv file data into data sets used to train machine learning models.
 Returns a json file with a list of training data sets of input variables and a target number.
 '''
 
+
 import csv
 import json
 
-input_months = int(input("Enter # of months to use as the input: "))
-target_months = int(input("Enter # of months to use as the target: "))
-
-filtered_data = []
 
 #   Training dataset template
 dataset = {
     "input": [],
     "target": 0
 }
-
-#   Record snapshots of months (input months + target months) while scanning the csv file
-curr_months = [{} for _ in range(input_months + target_months)]
 months = ["January", "February", "March", "April", "May",
           "June", "July", "August", "September", "October", "November", "December"]
+filtered_data = []
 
 
-def organize_data(line, curr_line: int, dataset_copy: dict, header) -> None:
+def organize_data(
+        line, curr_line: int,
+        dataset_copy: dict,
+        header, curr_months,
+        input_months,
+        target_months) -> None:
     '''Record new month into the snapshot. Organize input and target month data for every data set.'''
 
     #   Climate Index values used as input data for each training set
@@ -44,7 +44,11 @@ def organize_data(line, curr_line: int, dataset_copy: dict, header) -> None:
         filtered_data.append(dataset_copy)
 
 
-def main(filename: str) -> None:
+def main(
+        filename: str,
+        curr_months: list,
+        input_months: int,
+        target_months: int) -> None:
     with open(f'MainData/{filename}.csv', 'r') as file:
         reader = csv.reader(file, delimiter=',')
         header = next(reader)
@@ -52,13 +56,24 @@ def main(filename: str) -> None:
 
         for line in reader:
             curr_line += 1
-            organize_data(line, curr_line, dataset.copy(), header)
+            organize_data(line, curr_line, dataset.copy(), header,
+                          curr_months, input_months, target_months)
 
     json_filename = f"{input_months}input_{target_months}target"
     with open(f'TrainingData/{input_months}Inputs/{json_filename}.json', 'w') as file:
-        json_string = json.dumps(filtered_data, indent=2)
+        json_string = json.dumps(
+            filtered_data, indent=None, separators=(',', ':'))
         file.write(json_string)
         file.close
 
 
-main("00_all_ClimateIndices_and_precip")
+for i in range(5, 11):
+    for j in range(1, 6):
+        # input_months = int(input("Enter # of months to use as the input: "))
+        # target_months = int(input("Enter # of months to use as the target: "))
+        filtered_data.clear()
+
+        #   Record snapshots of months (input months + target months) while scanning the csv file
+        curr_months = [{} for _ in range(i + j)]
+        main("00_all_ClimateIndices_and_precip",
+             curr_months, i, j)
