@@ -16,7 +16,7 @@ months = ["January", "February", "March", "April", "May",
           "June", "July", "August", "September", "October", "November", "December"]
 
 
-def organize_data(line, curr_line, dataset_copy, header):
+def organize_data(line, curr_line: int, dataset_copy: dict, header) -> None:
     '''Record new month into the snapshot. Organize input and target month data for every data set.'''
 
     #   Climate Index values used as input data for each training set
@@ -37,7 +37,7 @@ def organize_data(line, curr_line, dataset_copy, header):
         filtered_data.append(dataset_copy)
 
 
-def main(filename):
+def main(filename: str) -> None:
     with open(f'MainData/{filename}.csv', 'r') as file:
         reader = csv.reader(file, delimiter=',')
         header = next(reader)
