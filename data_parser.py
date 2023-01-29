@@ -6,6 +6,8 @@ Returns a json file with a list of training data sets of input variables and a t
 import csv
 import json
 
+input_months = int(input("Enter # of months to use as the input: "))
+target_months = int(input("Enter # of months to use as the target: "))
 
 filtered_data = []
 
@@ -15,8 +17,8 @@ dataset = {
     "target": 0
 }
 
-#   Record snapshots of 13 months (8 input months + 5 target months) while scanning the csv file
-curr_months = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+#   Record snapshots of months (input months + target months) while scanning the csv file
+curr_months = [{} for _ in range(input_months + target_months)]
 months = ["January", "February", "March", "April", "May",
           "June", "July", "August", "September", "October", "November", "December"]
 
@@ -35,10 +37,10 @@ def organize_data(line, curr_line: int, dataset_copy: dict, header) -> None:
     curr_months.insert(len(curr_months), input_types)
 
     #   Start adding training data sets once line 13 is reached (for a complete data set)
-    if curr_line > 12:
-        dataset_copy["input"] = curr_months[:8]
+    if curr_line > (input_months + target_months - 1):
+        dataset_copy["input"] = curr_months[:input_months]
         dataset_copy["target"] = sum(
-            [float(month["precipitation"]) for month in curr_months[-5:]])
+            [float(month["precipitation"]) for month in curr_months[-target_months:]])
         filtered_data.append(dataset_copy)
 
 
@@ -52,7 +54,8 @@ def main(filename: str) -> None:
             curr_line += 1
             organize_data(line, curr_line, dataset.copy(), header)
 
-    with open('training_data.json', 'w') as file:
+    json_filename = f"{input_months}input_{target_months}target"
+    with open(f'TrainingData/{input_months}Inputs/{json_filename}.json', 'w') as file:
         json_string = json.dumps(filtered_data, indent=2)
         file.write(json_string)
         file.close
